@@ -1,0 +1,29 @@
+@tamanioTextCabecera:0.7em;
+@tamanioTitulo:2em;
+.cambiar-display(@display:none){
+	display:@display;
+}
+.cambiar-columnas-grid(@columnas:42w 48w){
+	grid-template-columns:@columnas;
+}
+.cambiar-columnas-usuarios(@columnas:42w 16w 16w 16w){
+	grid-template-columns:@columnas;
+}
+@media screen and (max-width: 760px){
+
+	.grid-item-cabecera{
+	font-size:@tamanioTextCabecera;
+	}
+	#CabId, #CabCorreo, #CabPlan, #CabEstado{.cambiar-display;}
+	.grid-cabecera-usuarios{
+	.cambiar-columnas-grid;
+	}
+	.container-usuarios{
+	.cambiar-columnas-usuarios;
+	}
+
+	.col{
+	display:block;
+	}
+
+}
