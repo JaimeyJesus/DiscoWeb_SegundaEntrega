@@ -110,6 +110,12 @@ function modeloUserComprobacionesNuevo($usuarioid,$valoresusuario, $passrepetida
     return false;
 }
 
+function modeloUserCifrar($clave){
+    $clavecifrada=new Cifrador($clave);
+    $clavecifrada->cifrar($clave);
+    return $clavecifrada
+}
+
 //Funcion que comprueba las entradas del formulario modificar
 function modeloUserComprobacionesModificar($valoresusuario, &$msg){
     if(comprobarContraseñas($valoresusuario[0],$valoresusuario[0], $msg)){

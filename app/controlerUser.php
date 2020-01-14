@@ -79,10 +79,13 @@ function ctlUserAlta(){
             //si hay datos enviados por post, y no es el boton de vuelta a atras, doy de alta al usuario
           if(!isset($_POST['atras'])){
             $msg = "";
-            $usuarioid      =  trim($_POST['id']); 
+            $usuarioid      =  trim($_POST['id']);
+            $clave= trim($_POST['password']); 
             $passrepetida   =  trim($_POST['password2']);
-            $valoresUsuario = [trim($_POST['password']) ,trim($_POST['nombre']),trim($_POST['mail']), $_POST['plan'], $_POST['estado']];
+            $valoresUsuario = [$clave ,trim($_POST['nombre']),trim($_POST['mail']), $_POST['plan'], $_POST['estado']];
             if(modeloUserComprobacionesNuevo($usuarioid, $valoresUsuario, $passrepetida, $msg)) {//comprueba valores introducidos
+                $valoresUsuario[0]=modeloUserCifrar();
+                print_r($valoresUsuario[0]);
                 if(modeloUserNuevo($usuarioid, $valoresUsuario)){
                     $msg="Usuario dado de alta correctamente";
                     modeloUserSave();
