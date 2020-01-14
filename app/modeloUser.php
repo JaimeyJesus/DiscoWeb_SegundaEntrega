@@ -36,7 +36,7 @@ function modeloOkUser($user,$password){
     $tusuarios = $_SESSION['tusuarios'];
     foreach ($tusuarios as $clave => $valor){      
         if($clave==$user){
-            //if($tusuarios[$clave][0]==$password){
+            //if($tusuarios[$clave][0]==$password){ ==> Para que funcione con contraseñas sin cifrar
            if(Cifrador::verificar($password,$tusuarios[$clave][0])){
                 return true;
             }
@@ -48,6 +48,10 @@ function modeloOkUser($user,$password){
 // Devuelve el plan de usuario (String)
 function modeloObtenerTipo($user){
     return $_SESSION['tusuarios'][$user][3];
+}
+
+function modeloUserObtenerEstado($user){
+    return $_SESSION['tusuarios'][$user][4];
 }
 
 // Borrar un usuario (boolean)

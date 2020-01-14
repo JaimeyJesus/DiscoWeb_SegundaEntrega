@@ -64,7 +64,7 @@ for ($j=0; $j < count($usuarioM); $j++){
 		<div class="col">
 			<div class="form-group">
 			<label for="plan">Plan:</label>
-			<select name="plan" class="form-control" <?=($_SESSION['modo']!==GESTIONUSUARIOS)?'readonly':'' ?> >
+			<select name="plan" class="form-control" >
     			<option value="0" <?=($usuarioM[3]=='Básico')?'selected':''?>>Básico</option>
     			<option value="1" <?=($usuarioM[3]=='Profesional')?'selected':''?>>Profesional</option>
     			<option value="2" <?=($usuarioM[3]=='Premium')?'selected':''?>>Premium</option>

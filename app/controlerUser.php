@@ -23,8 +23,14 @@ function  ctlUserInicio(){
                     header('Location:index.php?orden=VerUsuarios');
                 }
                 else {
+                    if(modeloUserObtenerEstado($user)=="A"){
                    $_SESSION['modo'] = GESTIONFICHEROS;
                    header('Location:index.php?orden=Mis Archivos');
+                    }
+                    else{
+                        $msg="Usuario momentaneamente inactivo, le enviaremos un email cuando su cuenta este activada.";
+                        include_once 'plantilla/facceso.php';
+                    }
                 }
             }
             else {
