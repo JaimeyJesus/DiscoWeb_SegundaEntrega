@@ -36,9 +36,11 @@ function modeloOkUser($user,$password){
     $tusuarios = $_SESSION['tusuarios'];
     foreach ($tusuarios as $clave => $valor){      
         if($clave==$user){
-            if(Cifrador::verificar($password,$tusuarios[$clave][0]))
+            //if($tusuarios[$clave][0]==$password){
+           if(Cifrador::verificar($password,$tusuarios[$clave][0])){
                 return true;
             }
+        }
         }           
     return false;
 }
