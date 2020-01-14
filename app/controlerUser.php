@@ -79,9 +79,9 @@ function ctlUserAlta(){
             //si hay datos enviados por post, y no es el boton de vuelta a atras, doy de alta al usuario
           if(!isset($_POST['atras'])){
             $msg = "";
-            $usuarioid      =  $_POST['id']; 
-            $passrepetida   =  $_POST['password2'];
-            $valoresUsuario = [$_POST['password'] ,$_POST['nombre'],$_POST['mail'], $_POST['plan'], $_POST['estado']];
+            $usuarioid      =  trim($_POST['id']); 
+            $passrepetida   =  trim($_POST['password2']);
+            $valoresUsuario = [trim($_POST['password']) ,trim($_POST['nombre']),trim($_POST['mail']), $_POST['plan'], $_POST['estado']];
             if(modeloUserComprobacionesNuevo($usuarioid, $valoresUsuario, $passrepetida, $msg)) {//comprueba valores introducidos
                 if(modeloUserNuevo($usuarioid, $valoresUsuario)){
                     $msg="Usuario dado de alta correctamente";
@@ -112,9 +112,9 @@ function ctlUserModificar(){
         }else{   
             //si no hay orden atras, se modifica el usuario    
             if(!isset($_POST['Atrás'])){
-                $usuarioid = $_POST['id'];
+                $usuarioid = trim($_POST['id']);
                 $usuarios  = modeloUserGetAll();
-                $valoresUsuario = [$_POST['clave'] ,$_POST['nombre'],$_POST['email'], $_POST['plan'], $_POST['estado']];
+                $valoresUsuario = [trim($_POST['clave']) ,trim($_POST['nombre']),trim($_POST['email']), $_POST['plan'], $_POST['estado']];
                 if(modeloUserComprobacionesModificar($valoresUsuario, $msg)){
                     modeloUserUpdate($usuarioid, $valoresUsuario);
                     modeloUserSave();
@@ -151,9 +151,9 @@ function ctlUserNuevo() {
         include_once 'plantilla/registro.php';
     }else{
         $msg = "";
-        $usuarioid      =  $_POST['id'];
-        $passrepetida   =  $_POST['password2'];
-        $valoresUsuario = [$_POST['password'] ,$_POST['nombre'],$_POST['mail'], $_POST['plan'], "B"];
+        $usuarioid      =  trim($_POST['id']);
+        $passrepetida   =  trim($_POST['password2']);
+        $valoresUsuario = [trim($_POST['password']) ,trim($_POST['nombre']),trim($_POST['mail']), $_POST['plan'], "B"];
         if(modeloUserComprobacionesNuevo($usuarioid, $valoresUsuario, $passrepetida, $msg)) {//comprueba valores introducidos
             if(modeloUserNuevo($usuarioid, $valoresUsuario)){
                 $msg="Usuario dado de alta correctamente";
