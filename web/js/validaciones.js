@@ -6,9 +6,15 @@ $(document).ready(inicializarEventos);
       maquetarFicheros();
       maquetarUsuarios();
     }
+    $('#deshabilitado').attr('disabled',true);
+    $('#Modificar').click(function(){
+      $('#deshabilitado').attr('disabled',false);
+    });
+  
 
     $("a[title='DESCARGAR']").mouseover(opcionDescarga);
     $("a[title='DESCARGAR']").mouseout(quitarAmpliacion);
+  }
     
     $(".grid-item").hover(function(){
     $(this).css("background-color", "rgba(200, 200, 200, 0.8)");

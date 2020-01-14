@@ -75,7 +75,7 @@ for ($j=0; $j < count($usuarioM); $j++){
 		<div class="col">
 			<div class="form-group">
 				<label for="estado">Estado:</label>
-				<select name="estado" class="form-control" <?=($_SESSION['modo']!==GESTIONUSUARIOS)?'readonly':'' ?>>
+				<select <?=($_SESSION['modo']!='1')?'id="deshabilitado"':'' ?> name="estado" class="form-control">
 					<option value="A"<?=($usuarioM[4]=='Activo')?'selected':''?>>Activo</option>
     				<option value="B"<?=($usuarioM[4]=='Bloqueado')?'selected':''?>>Bloqueado</option>
     				<option value="I"<?=($usuarioM[4]=='Inactivo')?'selected':''?>>Inactivo</option>
