@@ -84,8 +84,7 @@ function ctlUserAlta(){
             $passrepetida   =  trim($_POST['password2']);
             $valoresUsuario = [$clave ,trim($_POST['nombre']),trim($_POST['mail']), $_POST['plan'], $_POST['estado']];
             if(modeloUserComprobacionesNuevo($usuarioid, $valoresUsuario, $passrepetida, $msg)) {//comprueba valores introducidos
-                $valoresUsuario[0]=modeloUserCifrar();
-                print_r($valoresUsuario[0]);
+                $valoresUsuario[0]=modeloUserCifrar($clave);
                 if(modeloUserNuevo($usuarioid, $valoresUsuario)){
                     $msg="Usuario dado de alta correctamente";
                     modeloUserSave();
@@ -117,8 +116,10 @@ function ctlUserModificar(){
             if(!isset($_POST['Atrás'])){
                 $usuarioid = trim($_POST['id']);
                 $usuarios  = modeloUserGetAll();
-                $valoresUsuario = [trim($_POST['clave']) ,trim($_POST['nombre']),trim($_POST['email']), $_POST['plan'], $_POST['estado']];
+                $clave=trim($_POST['clave']);
+                $valoresUsuario = [$clave,trim($_POST['nombre']),trim($_POST['email']), $_POST['plan'], $_POST['estado']];
                 if(modeloUserComprobacionesModificar($valoresUsuario, $msg)){
+                    $valoresUsuario[0]=modeloUserCifrar($clave);
                     modeloUserUpdate($usuarioid, $valoresUsuario);
                     modeloUserSave();
                     //si es administrador, después de modificar se muestra ver usuarios
@@ -156,8 +157,10 @@ function ctlUserNuevo() {
         $msg = "";
         $usuarioid      =  trim($_POST['id']);
         $passrepetida   =  trim($_POST['password2']);
-        $valoresUsuario = [trim($_POST['password']) ,trim($_POST['nombre']),trim($_POST['mail']), $_POST['plan'], "B"];
+        $clave= trim($_POST['password']); 
+        $valoresUsuario = [$clave,trim($_POST['nombre']),trim($_POST['mail']), $_POST['plan'], "B"];
         if(modeloUserComprobacionesNuevo($usuarioid, $valoresUsuario, $passrepetida, $msg)) {//comprueba valores introducidos
+            $valoresUsuario[0]=modeloUserCifrar($clave);
             if(modeloUserNuevo($usuarioid, $valoresUsuario)){
                 $msg="Usuario dado de alta correctamente";
                 modeloUserSave();

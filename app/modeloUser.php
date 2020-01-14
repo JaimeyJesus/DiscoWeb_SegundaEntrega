@@ -1,5 +1,5 @@
 <?php 
-
+include_once 'plantilla/Cifrador.php';
 /* DATOS DE USUARIO
 • Identificador ( 5 a 10 caracteres, no debe existir previamente, solo letras y números)
 • Contraseña ( 8 a 15 caracteres, debe ser segura)
@@ -36,13 +36,11 @@ function modeloOkUser($user,$password){
     $tusuarios = $_SESSION['tusuarios'];
     foreach ($tusuarios as $clave => $valor){      
         if($clave==$user){
-            if($tusuarios[$clave][0]==$password){
+            if(Cifrador::verificar($password,$tusuarios[$clave][0]))
                 return true;
             }
         }           
-    }
     return false;
-    
 }
 
 // Devuelve el plan de usuario (String)
@@ -111,9 +109,9 @@ function modeloUserComprobacionesNuevo($usuarioid,$valoresusuario, $passrepetida
 }
 
 function modeloUserCifrar($clave){
-    $clavecifrada=new Cifrador($clave);
-    $clavecifrada->cifrar($clave);
-    return $clavecifrada
+  
+    $clavecifrada= Cifrador::cifrar($clave);
+    return $clavecifrada;
 }
 
 //Funcion que comprueba las entradas del formulario modificar
