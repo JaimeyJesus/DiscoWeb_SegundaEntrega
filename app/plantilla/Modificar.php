@@ -27,6 +27,7 @@ for ($j=0; $j < count($usuarioM); $j++){
 			</div>
 		</div>
 	</div>
+	<div class="row">
 		<div class="col">
 			<div class="form-group">
 				<label for="nombre">Nombre:</label>
@@ -35,6 +36,7 @@ for ($j=0; $j < count($usuarioM); $j++){
 				<div class="valid-feedback">Valid.</div>
 				<div class="invalid-feedback">Por favor, introduzca un nombre</div>
 			</div>
+		</div>
 		</div>
 	
 	<div class="row">

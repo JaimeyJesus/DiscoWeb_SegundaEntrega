@@ -17,7 +17,7 @@ ob_start();
     <div class="row">
       <div class="col">
         <div class="form-group">
-          <input name="archivo" type="file" id="subirArchivo"/>      
+          <input name="archivo" type="file" id="subirArchivo" value="Examinar" />      
         </div>
       </div>
     </div>

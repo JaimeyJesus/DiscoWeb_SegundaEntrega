@@ -34,6 +34,10 @@ footer{
 	border: solid 1px;
 	padding: 1%;
 }
+.container{
+	position: relative;
+	height: auto;
+}
 
 #header {
 	background: #3A847E;

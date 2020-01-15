@@ -36,7 +36,7 @@ ob_start();
     ?>
 <div class="container-usuarios">
     <?php foreach ($usuarios as $clave => $datosusuario) : ?>    		
-    	<div class="grid-item" id="id"><?= $clave ?></div>
+    	<div class="grid-item" id="identificador"><?= $clave ?></div>
 	<?php for  ($j=1; $j < count($datosusuario); $j++) :?>
   <div class="grid-item"<?=($j==2)?"id='Correo'":''?>
   <?=($j==3)?"id='plan'":''?><?=($j==4)?"id='Estado'":''?>

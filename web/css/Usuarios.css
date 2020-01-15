@@ -5,7 +5,7 @@
   #CabId,
   #CabCorreo,
   #CabPlan,
-  #CabEstado, #Estado, #Correo, #plan, #id {
+  #CabEstado, #Estado, #Correo, #plan, #identificador {
     display: none;
   }
   .grid-cabecera-usuarios {

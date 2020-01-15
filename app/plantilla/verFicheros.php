@@ -82,7 +82,7 @@ else{
 </div>
 </div>
 <form id="botones" action="index.php?id=<?$userId?>">
-<div class="col-md-6">		
+<div class="col">		
 	<span>Numero de ficheros: <?=$numeroArchivos?></span>
 	<span>Espacio ocupado: <?=$espacioTotal." Kb" ?></span>
 </div>
