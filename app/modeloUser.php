@@ -54,7 +54,7 @@ function modeloOkUser($user,$password){
         }           
     return false;*/
     $bd=abrirBD();
-    $consulta="SELECT clave FROM usuarios WHERE user=?";
+    $consulta="SELECT clave FROM usuarios WHERE user=?;";
     $consultaClave=$bd->prepare($consulta);
     $consultaClave->bind_param("s",$user);
     $consultaClave->execute();
@@ -70,20 +70,36 @@ function modeloOkUser($user,$password){
 
 // Devuelve el plan de usuario (String)
 function modeloObtenerTipo($user){
-    return $_SESSION['tusuarios'][$user][3];
+    $bd=abrirBD();
+    $tipo=$bd->prepare("SELECT tipo FROM usuarios WHERE user=?;");
+    $tipo->bind_param("s", $user);
+    $tipo->execute();
+    if($result=$tipo->get_result()){
+        if($fila=$result->fetch_array()){
+            return $fila[0];
+        }
+    }
 }
 
 function modeloUserObtenerEstado($user){
-    return $_SESSION['tusuarios'][$user][4];
+    $bd=abrirBD();
+    $tipo=$bd->prepare("SELECT estado FROM usuarios WHERE user=?;");
+    $tipo->bind_param("s", $user);
+    $tipo->execute();
+    if($result=$tipo->get_result()){
+        if($fila=$result->fetch_array()){
+            return $fila[0];
+        }
+    }
 }
 
 // Borrar un usuario (boolean)
 function modeloUserDel($user){
-    if(isset($_SESSION['tusuarios'][$user])){
-        unset($_SESSION['tusuarios'][$user]);
-        return true;
-    }
-    return false;
+    $bd=abrirBD();
+    $tipo=$bd->prepare("DELETE * FROM usuarios WHERE user=?;");
+    $tipo->bind_param("s", $user);
+    $tipo->execute();
+    
 }
 
 // Tabla de todos los usuarios para visualizar
