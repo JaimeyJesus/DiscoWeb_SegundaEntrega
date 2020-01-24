@@ -21,19 +21,29 @@ function modeloUserInit(){
         ];*/
     
    
-    $datosjson = @file_get_contents(FILEUSER) or die("ERROR al abrir fichero de usuarios");
+   /* $datosjson = @file_get_contents(FILEUSER) or die("ERROR al abrir fichero de usuarios");
     $tusuarios = json_decode($datosjson, true);
     
      if(!isset($_SESSION['tusuarios'])){
     $_SESSION['tusuarios'] = $tusuarios;
     }
-
+*/
       
+}
+
+function abrirBD(){
+    $conex = new mysqli("127.0.0.1", "root", "root", "usuarios"); // Abre una conexión
+    if ($conex->connect_errno) {
+        // Comprueba conexión
+        printf("Conexión fallida: %s\n", mysqli_connect_error());
+        exit();
+    }
+    return $conex;
 }
 
 // Comprueba usuario y contraseña (boolean)
 function modeloOkUser($user,$password){
-    $tusuarios = $_SESSION['tusuarios'];
+   /* $tusuarios = $_SESSION['tusuarios'];
     foreach ($tusuarios as $clave => $valor){      
         if($clave==$user){
             //if($tusuarios[$clave][0]==$password){ ==> Para que funcione con contraseñas sin cifrar
@@ -42,7 +52,20 @@ function modeloOkUser($user,$password){
             }
         }
         }           
-    return false;
+    return false;*/
+    $bd=abrirBD();
+    $consulta="SELECT clave FROM usuarios WHERE user=?";
+    $consultaClave=$bd->prepare($consulta);
+    $consultaClave->bind_param("s",$user);
+    $consultaClave->execute();
+    if($result=$consultaClave->get_result()){
+       if( $fila=$result->fetch_array()){
+           echo $fila[0];
+           if(Cifrador::verificar($password,$fila[0])){
+               return true;
+           }return false;
+       }
+    }
 }
 
 // Devuelve el plan de usuario (String)
