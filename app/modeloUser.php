@@ -38,6 +38,7 @@ function abrirBD(){
         printf("Conexión fallida: %s\n", mysqli_connect_error());
         exit();
     }
+    $conex->set_charset("utf8");
     return $conex;
 }
 
@@ -54,13 +55,14 @@ function modeloOkUser($user,$password){
         }           
     return false;*/
     $bd=abrirBD();
-    $consulta="SELECT clave FROM usuarios WHERE user=?;";
-    $consultaClave=$bd->prepare($consulta);
+    $consultaClave=$bd->prepare("SELECT clave FROM usuarios WHERE user=?;");
     $consultaClave->bind_param("s",$user);
     $consultaClave->execute();
     if($result=$consultaClave->get_result()){
        if( $fila=$result->fetch_array()){
-           echo $fila[0];
+        echo $fila[0];
+           if(password_verify($password,$fila[0])){echo "true";}else{echo "false";}
+          
            if(Cifrador::verificar($password,$fila[0])){
                return true;
            }return false;
@@ -96,10 +98,12 @@ function modeloUserObtenerEstado($user){
 // Borrar un usuario (boolean)
 function modeloUserDel($user){
     $bd=abrirBD();
-    $tipo=$bd->prepare("DELETE * FROM usuarios WHERE user=?;");
+    $tipo=$bd->prepare("DELETE FROM usuarios WHERE user=?;");
     $tipo->bind_param("s", $user);
-    $tipo->execute();
-    
+    if ($tipo->execute()){
+        return true;
+    }
+    return false;
 }
 
 // Tabla de todos los usuarios para visualizar
@@ -107,13 +111,18 @@ function modeloUserGetAll (){
     // Genero lo datos para la vista que no muestra la contraseña ni los códigos de estado o plan
     // sino su traducción a texto
     $tuservista=[];
-    foreach ($_SESSION['tusuarios'] as $clave => $datosusuario){
-        $tuservista[$clave] = [$datosusuario[0],
-                               $datosusuario[1],
-                               $datosusuario[2],
-                               PLANES[$datosusuario[3]],
-                               ESTADOS[$datosusuario[4]]
-                               ];
+    $bd=abrirBD();
+    $tipo=$bd->prepare("SELECT * FROM usuarios");
+    $tipo->execute();
+    if($result=$tipo->get_result()){
+        while($datosusuario=$result->fetch_assoc()){
+            $tuservista[$datosusuario["user"]] = [$datosusuario["clave"],
+            $datosusuario["nombre"],
+            $datosusuario["correo"],
+            PLANES[$datosusuario["tipo"]],
+            ESTADOS[$datosusuario["estado"]]
+            ];
+        }
     }
     return $tuservista;
 }
@@ -129,15 +138,24 @@ function modeloUserSave(){
 //Vuelca nuevo usuario en la session
 function modeloUserNuevo($idusuario, $datosuser){
    
-    $_SESSION['tusuarios'][$idusuario]=$datosuser;
-    
-    return true;
+    $bd=abrirBD();
+    $tipo=$bd->prepare("INSERT INTO usuarios VALUES (?,?,?,?,?,?);");
+    $tipo->bind_param("ssssss", $idusuario, $datosuser[0],$datosuser[1],$datosuser[2],$datosuser[3],$datosuser[4]);
+    return $tipo->execute();
+
 }
+    
+
 
 //Actualiza un usuario en la session
-function modeloUserUpdate($id, $arrayValores){
-    $_SESSION['tusuarios'][$id]=$arrayValores;
+function modeloUserUpdate($id, $datosuser){
+    $bd=abrirBD();
+    $tipo=$bd->prepare("UPDATE usuarios SET clave=?, nombre=?, correo=?, tipo=?, estado=? WHERE user=?;");
+    $tipo->bind_param("ssssss", $datosuser[0],$datosuser[1],$datosuser[2],$datosuser[3],$datosuser[4],$id);
+    return $tipo->execute();
 }
+
+
 
 //Funcion que comprueba todas las entradas del formulario Nuevo
 function modeloUserComprobacionesNuevo($usuarioid,$valoresusuario, $passrepetida ,&$msg){
@@ -155,20 +173,20 @@ function modeloUserComprobacionesNuevo($usuarioid,$valoresusuario, $passrepetida
 
 function modeloUserCifrar($clave){
   
-    $clavecifrada= Cifrador::cifrar($clave);
-    return $clavecifrada;
+    return Cifrador::cifrar($clave);
+    
 }
 
 //Funcion que comprueba las entradas del formulario modificar
-function modeloUserComprobacionesModificar($valoresusuario, &$msg){
-    if(comprobarContraseñas($valoresusuario[0],$valoresusuario[0], $msg)){
-        if(modeloUserComprobarNombre($valoresusuario[1], $msg)){
-            if(ComprobarMailModificar($valoresusuario[2], $msg)){
-                return true;
-            }
-        }   
-    }
-    return false;
+function modeloUserComprobacionesModificar($valoresusuario, &$msg, $datosUsuario){
+    if(modeloUserComprobarNombre($valoresusuario[1], $msg)){
+        if(ComprobarMailModificar($valoresusuario[2], $msg)){
+            if($datosUsuario[0]!=$valoresusuario[0]){
+                if(comprobarContraseñas($valoresusuario[0],$valoresusuario[0], $msg)){   
+                    return true;}
+                }else{
+                    return true;
+                }   }    }return false;
 }
 
 
@@ -177,9 +195,16 @@ function modeloUserComprobarId($id, &$msg){
         $msg="El id de usuario debe tener entre 5 y 10 caracteres.";
         return false;
     }
-    if(isset($_SESSION['tusuarios'][$id])){
-        $msg="Ya existe un usuario con ese id.";
-        return false;
+    $bd=abrirBD();
+    $user=$bd->prepare("SELECT user FROM usuarios");
+    $user->execute();
+    if($result=$user->get_result()){
+        while($fila=$result->fetch_array()){
+            if($fila['user']==$id){
+                $msg="Ya existe un usuario con ese id.";
+                return false;
+            }
+        }
     }
     if(!ctype_alnum($id)){
         $msg="El id solo debe contener letras y números.";
@@ -199,11 +224,15 @@ function modeloUserComprobarNombre($nombre, &$msg){
 
 
 function modeloUserComprobarMail($mail, &$msg){
-
-    foreach($_SESSION['tusuarios'] as $clave => $valor){
-        if($valor[2]===$mail){
-            $msg="Ya existe un usuario con ese mail";
-            return false;
+    $bd=abrirBD();
+    $correo=$bd->prepare("SELECT correo FROM usuarios");
+    $correo->execute();
+    if($result=$correo->get_result()){
+        while($fila=$result->fetch_array()){
+            if($fila['correo']==$mail){
+                $msg="Ya existe un usuario con ese mail";
+                return false;
+            }
         }
     }
     if(strpos($mail, "@") && strpos($mail, ".")){
