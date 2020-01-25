@@ -43,7 +43,7 @@ ob_start();
   ><?=$datosusuario[$j] ?></div>
     	<?php endfor;?>
     <div class="grid-item"><a href="#"
-		onclick="confirmarBorrar('<?= $datosusuario[1]."','".$clave."'"?>);">
+		onclick="confirmarBorrar('<?= $datosusuario[1].",".$clave?>')">
 		<img class="icono" title="borrar" src="web/img/papelera.png"></a>
 	</div>
     <div class="grid-item"><a href="<?= $auto?>?orden=Modificar&id=<?= $clave ?>">
