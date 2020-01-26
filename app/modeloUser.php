@@ -162,7 +162,7 @@ function modeloUserComprobacionesNuevo($usuarioid,$valoresusuario, $passrepetida
     if(modeloUserComprobarId($usuarioid, $msg)){
         if(comprobarContraseñas($valoresusuario[0],$passrepetida, $msg)){
             if(modeloUserComprobarNombre($valoresusuario[1], $msg)){
-                if(modeloUserComprobarMail($valoresusuario[2], $msg)){
+                if(modeloUserComprobarMail($valoresusuario[2], $msg, "")){
                     return true;
                 }
             }
@@ -180,8 +180,8 @@ function modeloUserCifrar($clave){
 //Funcion que comprueba las entradas del formulario modificar
 function modeloUserComprobacionesModificar($valoresusuario, &$msg, $datosUsuario){
     if(modeloUserComprobarNombre($valoresusuario[1], $msg)){
-        if(ComprobarMailModificar($valoresusuario[2], $msg)){
-            if($datosUsuario[0]!=$valoresusuario[0]){
+        if(modeloUserComprobarMail($valoresusuario[2], $msg, $datosUsuario[2])){
+            if($datosUsuario[0]!=$valoresusuario[0]){//condicion para ver si se cambio la contraseña y de ser asi se comprueba la nueva
                 if(comprobarContraseñas($valoresusuario[0],$valoresusuario[0], $msg)){   
                     return true;}
                 }else{
@@ -223,7 +223,8 @@ function modeloUserComprobarNombre($nombre, &$msg){
 }
 
 
-function modeloUserComprobarMail($mail, &$msg){
+function modeloUserComprobarMail($mail, &$msg, $mailuser){
+    if($mail!=$mailuser){
     $bd=abrirBD();
     $correo=$bd->prepare("SELECT correo FROM usuarios");
     $correo->execute();
@@ -235,20 +236,13 @@ function modeloUserComprobarMail($mail, &$msg){
             }
         }
     }
+}
     if(strpos($mail, "@") && strpos($mail, ".")){
         return true;
     }
     $msg="El email no es correcto.";
     return false;
     
-}
-
-function ComprobarMailModificar($mail, &$msg){
-    if(strpos($mail, "@") && strpos($mail, ".")){
-        return true;
-    }
-    $msg="El email no es correcto.";
-    return false;
 }
 
 
