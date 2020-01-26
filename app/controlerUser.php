@@ -5,6 +5,7 @@
 include_once 'config.php';
 include_once 'modeloUser.php';
 include_once 'controlerFile.php';
+include_once 'plantilla/Usuario.php';
 
 
 function  ctlUserInicio(){

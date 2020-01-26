@@ -1,5 +1,6 @@
 <?php 
 include_once 'plantilla/Cifrador.php';
+include_once 'plantilla/Usuario.php';
 /* DATOS DE USUARIO
 • Identificador ( 5 a 10 caracteres, no debe existir previamente, solo letras y números)
 • Contraseña ( 8 a 15 caracteres, debe ser segura)
@@ -110,18 +111,19 @@ function modeloUserDel($user){
 function modeloUserGetAll (){
     // Genero lo datos para la vista que no muestra la contraseña ni los códigos de estado o plan
     // sino su traducción a texto
+    $i=0;
     $tuservista=[];
     $bd=abrirBD();
     $tipo=$bd->prepare("SELECT * FROM usuarios");
     $tipo->execute();
     if($result=$tipo->get_result()){
         while($datosusuario=$result->fetch_assoc()){
-            $tuservista[$datosusuario["user"]] = [$datosusuario["clave"],
+            $tuservista[]= new Usuario($datosusuario["user"],$datosusuario["clave"],
             $datosusuario["nombre"],
             $datosusuario["correo"],
             PLANES[$datosusuario["tipo"]],
             ESTADOS[$datosusuario["estado"]]
-            ];
+        );
         }
     }
     return $tuservista;

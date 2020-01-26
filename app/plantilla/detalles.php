@@ -29,7 +29,7 @@ $gestor=opendir($directorio);
 <tbody>
     <tr>
       <th scope="row">Nombre</th>
-    <td><?=$usuarioM[1]?></td>
+    <td><?=$_GET["id"]->nombre?></td>
     </tr>
     <tr> 
     <th scope="row">Email</th>
