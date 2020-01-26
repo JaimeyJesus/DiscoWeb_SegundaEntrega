@@ -225,18 +225,18 @@ function modeloUserComprobarNombre($nombre, &$msg){
 
 function modeloUserComprobarMail($mail, &$msg, $mailuser){
     if($mail!=$mailuser){
-    $bd=abrirBD();
-    $correo=$bd->prepare("SELECT correo FROM usuarios");
-    $correo->execute();
-    if($result=$correo->get_result()){
-        while($fila=$result->fetch_array()){
-            if($fila['correo']==$mail){
-                $msg="Ya existe un usuario con ese mail";
-                return false;
+        $bd=abrirBD();
+        $correo=$bd->prepare("SELECT correo FROM usuarios");
+        $correo->execute();
+        if($result=$correo->get_result()){
+            while($fila=$result->fetch_array()){
+                if($fila['correo']==$mail){
+                    $msg="Ya existe un usuario con ese mail";
+                    return false;
+                }
             }
         }
     }
-}
     if(strpos($mail, "@") && strpos($mail, ".")){
         return true;
     }
