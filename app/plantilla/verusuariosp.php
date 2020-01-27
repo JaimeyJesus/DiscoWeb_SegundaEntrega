@@ -1,4 +1,5 @@
 <?php
+include_once 'Usuario.php';
 
 ob_start();
 
@@ -20,6 +21,7 @@ ob_start();
   </div>
 </nav>
 <?=(isset($msg))?'<p>'.$msg.'</p>':''?>
+ 
 
 <div class="grid-cabecera-usuarios">
     <div class="grid-item-cabecera" id="CabId"><b>ID</b></div>
@@ -35,26 +37,25 @@ ob_start();
     $auto = $_SERVER['PHP_SELF'];    
     ?>
 <div class="container-usuarios">
-    <?php foreach ($usuarios as $clave => $datosusuario) : ?>    		
-    	<div class="grid-item" id="identificador"><?= $clave ?></div>
-	<?php for  ($j=1; $j < count($datosusuario); $j++) :?>
-  <div class="grid-item"<?=($j==2)?"id='Correo'":''?>
-  <?=($j==3)?"id='plan'":''?><?=($j==4)?"id='Estado'":''?>
-  ><?=$datosusuario[$j] ?></div>
-    	<?php endfor;?>
-    <div class="grid-item"><a href="#"
-		onclick="confirmarBorrar('<?= $datosusuario[1]."','".$clave."'"?>);">
-		<img class="icono" title="borrar" src="web/img/papelera.png"></a>
-	</div>
-    <div class="grid-item"><a href="<?= $auto?>?orden=Modificar&id=<?= $clave ?>">
+    <?php foreach ($usuarios as $usuario){ ?>    		
+    	<div class="grid-item" id="identificador"><?= $usuario->user ?></div>
+      <div class="grid-item" ><?=$usuario->nombre ?></div>
+      <div class="grid-item" id='Correo' ><?=$usuario->correo ?></div>
+      <div class="grid-item" id='plan'><?=$usuario->plan ?></div>
+      <div class="grid-item" id='Estado'><?=$usuario->estado ?></div>
+      <div class="grid-item"><a href="#"
+		  onclick="confirmarBorrar('<?= $usuario->user?>')">
+		  <img class="icono" title="borrar" src="web/img/papelera.png"></a>
+	    </div>
+      <div class="grid-item"><a href="<?= $auto?>?orden=Modificar&id=<?= $usuario->user ?>">
     	<img class="icono" title="modificar" src="web/img/editar.png"></a>
-	</div>
-    <div class="grid-item"><a href="<?= $auto?>?orden=Detalles&id=<?= $clave?>">
+	    </div>
+      <div class="grid-item"><a href="<?= $auto?>?orden=Detalles&id=<?= $usuario->user ?>">
     	<img class="icono" title="detalles" src="web/img/ojo.png"></a>
-	</div>
+	    </div>
 
 
-<?php endforeach; ?>
+    <?php } ?>
 </div>
 <?php
 

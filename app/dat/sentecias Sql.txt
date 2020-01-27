@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS `usuarios` (
   `user` varchar(12) NOT NULL DEFAULT '0',
-  `clave` varchar(30) DEFAULT NULL,
-  `nombre` int(4) DEFAULT NULL,
+  `clave` varchar(255) DEFAULT NULL,
+  `nombre` varchar(20) DEFAULT NULL,
   `correo` varchar(25) NOT NULL DEFAULT '0',
   `tipo` varchar(1) DEFAULT NULL,
   `estado` varchar(1) DEFAULT NULL,

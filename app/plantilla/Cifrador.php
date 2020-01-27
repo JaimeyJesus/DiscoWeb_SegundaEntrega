@@ -10,3 +10,4 @@ class Cifrador{
         return password_verify($clave, $clavecifrada);
     }
 }
+?>

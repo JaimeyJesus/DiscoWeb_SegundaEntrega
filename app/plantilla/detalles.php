@@ -1,5 +1,5 @@
 <?php
-
+include_once "Usuario.php";
 ob_start();
 
 ?>
@@ -7,7 +7,11 @@ ob_start();
 
 <?php  
 $auto = $_SERVER['PHP_SELF'];
-$usuarioM=$usuarios[$_GET['id']];
+foreach($usuarios as $clave=>$valor){
+  if($valor->user == $_GET['id']){
+    $user=$usuarios[$clave];
+  }
+}
 $numeroArchivos=0;
 $espacioTotal=0;
 $directorio="app/dat/".$_GET['id'];
@@ -29,15 +33,15 @@ $gestor=opendir($directorio);
 <tbody>
     <tr>
       <th scope="row">Nombre</th>
-    <td><?=$usuarioM[1]?></td>
+    <td><?=$user->nombre?></td>
     </tr>
     <tr> 
     <th scope="row">Email</th>
-    <td><?=$usuarioM[2]?></td>
+    <td><?=$user->correo?></td>
     </tr>
     <tr>
     <th scope="row">Plan</th>
-    <td><?=$usuarioM[3]?></td>
+    <td><?=$user->plan?></td>
     </tr>
     <tr>
     <th scope="row">Número de ficheros</th>

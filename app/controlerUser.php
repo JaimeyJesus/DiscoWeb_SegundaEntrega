@@ -5,6 +5,7 @@
 include_once 'config.php';
 include_once 'modeloUser.php';
 include_once 'controlerFile.php';
+include_once 'plantilla/Usuario.php';
 
 
 function  ctlUserInicio(){
@@ -29,6 +30,7 @@ function  ctlUserInicio(){
                     }
                     else{
                         $msg="Usuario momentaneamente inactivo, le enviaremos un email cuando su cuenta este activada.";
+                        session_destroy();
                         include_once 'plantilla/facceso.php';
                     }
                 }
@@ -69,7 +71,7 @@ function ctlUserBorrar(){
             $msg="No se pudo relaizar la operación.";
         }
         ctlFileBorrarDir($user);    //al borrar el usuario se borrar también su carpeta de archivos.
-        modeloUserSave(); 
+        
         ctlUserVerUsuarios();
     
 }
@@ -124,17 +126,16 @@ function ctlUserModificar(){
                 $usuarios  = modeloUserGetAll();
                 $clave=trim($_POST['clave']);
                 $valoresUsuario = [$clave,trim($_POST['nombre']),trim($_POST['email']), $_POST['plan'], $_POST['estado']];
-                if(modeloUserComprobacionesModificar($valoresUsuario, $msg)){
+                if(modeloUserComprobacionesModificar($valoresUsuario, $msg, $usuarios[$usuarioid])){
                     $valoresUsuario[0]=modeloUserCifrar($clave);
-                    modeloUserUpdate($usuarioid, $valoresUsuario);
-                    modeloUserSave();
                     //si es administrador, después de modificar se muestra ver usuarios
                     if($_SESSION['modo']==GESTIONUSUARIOS){
-                        ctlUserVerUsuarios();
-                    }else{//si es un usuario normal se muestra ver ficheros
+                    modeloUserUpdate($usuarioid, $valoresUsuario);
+                    ctlUserVerUsuarios();}else{//si es un usuario normal se muestra ver ficheros
+                        modeloUserUpdate($usuarioid,$valoresUsuario);
                         ctlFileVerFicheros();
                     }
-                }else{
+                    }else{
                     include_once 'plantilla/Modificar.php';
                 }
             }else{ 
@@ -169,8 +170,8 @@ function ctlUserNuevo() {
             $valoresUsuario[0]=modeloUserCifrar($clave);
             if(modeloUserNuevo($usuarioid, $valoresUsuario)){
                 $msg="Usuario dado de alta correctamente";
-                modeloUserSave();
-                modeloUserCrearDir($usuarioid);                 
+                modeloUserCrearDir($usuarioid); 
+                session_destroy();                
                 header('Location:index.php');
             }else{
                 $msg="No se pudo realizar la operación.";
